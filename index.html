@@ -161,6 +161,12 @@
   .ig-btn{color:#fff;border:none;
     background:linear-gradient(135deg,#F58529,#DD2A7B 55%,#8134AF)}
   .ig-btn:hover{filter:brightness(1.05)}
+  .tg-btn{color:#fff;border:none;margin-top:1.4rem;
+    background:linear-gradient(135deg,#2AABEE,#229ED9)}
+  .tg-btn:hover{filter:brightness(1.05)}
+  .copybox{margin-top:12px;text-align:left;white-space:pre-wrap;word-break:break-word;
+    font-family:'Nunito';font-size:.88rem;line-height:1.45;background:#fff;color:var(--cocoa);
+    border:1.5px solid rgba(233,162,59,.35);border-radius:14px;padding:12px 14px;user-select:all}
 
   /* ── Плаваючі кнопки ── */
   .float-wrap{position:fixed;left:14px;bottom:14px;z-index:50;
@@ -412,6 +418,8 @@
         <span class="big-emoji">💛</span>
         <h1 class="title" id="done-title">Ееее клас!</h1>
         <p class="sub" id="done-sub">Я вже знаю, куди йдемо. Скоро напишу 😊</p>
+        <a id="tg-send" class="btn btn-full tg-btn" style="display:none" href="#" target="_blank" rel="noopener">📩 Надіслати Степану в Телеграм</a>
+        <pre id="done-copy" class="copybox" style="display:none"></pre>
         <div class="btns">
           <button class="btn btn-yes" onclick="openSvc()">Що вміє Степан 😎</button>
           <button class="btn btn-ghost" onclick="go('s-events')">Змінити вибір</button>
@@ -443,17 +451,25 @@
   <div class="toast" id="toast"></div>
 
 <script>
-/* ═══════════════ НАЛАШТУВАННЯ ТЕЛЕГРАМУ ═══════════════
-   Щоб вибори падали тобі в Телеграм (без PHP, чисто з браузера):
-   1) У Телеграмі напиши @BotFather → /newbot → отримай ТОКЕН.
-   2) Напиши своєму боту будь-що (щоб він міг тобі писати).
-   3) Дізнайся свій chat_id: напиши @userinfobot → він пришле число.
-   4) Встав токен і chat_id нижче. Все — вибори полетять тобі в чат.
-   Якщо лишити як є — сайт просто працює, а вибори пишуться в консоль. */
+/* ═══════════════ ТЕЛЕГРАМ ═══════════════
+   Працює у двох режимах:
+
+   А) ПРОСТИЙ (нічого не треба): після вибору відкривається ТВІЙ чат у Телеграмі,
+      а вибір Маряни копіюється — їй лишається вставити й надіслати.
+      Впиши свій контакт у 'contact' нижче (краще свій @нік — надійніше за номер).
+
+   Б) АВТОМАТ (приходить само, без її «надіслати»): зроби бота й впиши token + chatId.
+      1) @BotFather → /newbot → ТОКЕН.
+      2) Напиши своєму боту будь-що.
+      3) @userinfobot → пришле твій chat_id (число).
+      Встав обидва нижче — і вибори летять тобі тихо самі.
+      Увага: токен у коді видно всім, хто гляне сайт. Для жарту ок; при потребі /revoke у BotFather. */
 const TG = {
-  token: 'PASTE_BOT_TOKEN_HERE',
-  chatId: 'PASTE_CHAT_ID_HERE'
+  token: '8802005323:AAF7v55Co52Mtxk_9O0tMu7nGitrQPtKFwY',
+  chatId: '355618733',
+  contact: 'https://t.me/st_kniazevych'
 };
+function botOn(){ return TG.token && !TG.token.startsWith('PASTE'); }
 async function notify(text, preview=false){
   if(!TG.token || TG.token.startsWith('PASTE')){ console.log('[Telegram]', text); return; }
   try{
@@ -483,7 +499,34 @@ function toast(msg){
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600);
 }
 
-function onMaryanaYes(){ notify('💛 Хтось відкрив запрошення і каже, що він Маряна 🙂'); go('s-mood'); }
+/* збираємо, що вона робила, щоб включити у фінальне повідомлення */
+const milestones=[];
+async function finish(line){
+  const full=[...milestones, '— — —', line].join('\n');
+  const sub=document.getElementById('done-sub');
+  const tgBtn=document.getElementById('tg-send');
+  const box=document.getElementById('done-copy');
+  if(botOn()){
+    notify(line);                 // повідомлення-віхи вже пішли раніше; шлемо фінал
+    sub.textContent='Записав — скоро напишу 😊';
+    tgBtn.style.display='none';
+    box.style.display='none';
+  }else{
+    let copied=false;
+    try{ await navigator.clipboard.writeText(full); copied=true; }catch(e){}
+    sub.textContent = copied
+      ? 'Твій вибір скопійовано 💛 Тисни кнопку — відкриється Телеграм Степана, встав і надішли.'
+      : 'Тисни кнопку — відкриється Телеграм Степана. Скопіюй текст нижче і надішли 💛';
+    tgBtn.href = TG.contact;
+    tgBtn.style.display='block';
+    box.textContent=full;
+    box.style.display='block';
+  }
+  go('s-done');
+  toast('Готово 💛');
+}
+
+function onMaryanaYes(){ notify('💛 Хтось відкрив запрошення і каже, що він Маряна 🙂'); milestones.push('💛 Це справді Маряна'); go('s-mood'); }
 
 /* ═══════════════ КОТИ НАСТРОЮ ═══════════════ */
 const catUrls=[
@@ -514,12 +557,13 @@ function moodNext(){
   if(!chosenMood){ toast('Вибери свою кицю 🐾'); return; }
   const url=catUrls[chosenMood-1];
   notify(`😻 Настрій Маряни сьогодні — киця №${chosenMood}\n${url}`, true);
+  milestones.push(`😻 Киця настрою №${chosenMood}: ${url}`);
   go('s-yablunytsia');
 }
 
 /* ═══════════════ ІНШІ КРОКИ ═══════════════ */
-function onYabYes(){ notify('🌸 Підтвердила: вона таки з Яблуниці!'); go('s-yab-yes'); }
-function onConcertYes(){ notify('🎉🎉 ПОГОДИЛАСЬ піти на концерт зі Степаном!!!'); go('s-events'); }
+function onYabYes(){ notify('🌸 Підтвердила: вона таки з Яблуниці!'); milestones.push('🌸 З Яблуниці ✓'); go('s-yab-yes'); }
+function onConcertYes(){ notify('🎉🎉 ПОГОДИЛАСЬ піти на концерт зі Степаном!!!'); milestones.push('🎉 Погодилась піти на концерт!'); go('s-events'); }
 
 /* ═══════════════ КНОПКА-ВТІКАЧ ═══════════════ */
 const runaway=document.getElementById('runaway');
@@ -581,11 +625,7 @@ function render(list, containerId, city, hasTickets){
   });
 }
 function pick(ev, city){
-  notify(`🎫 Маряна обрала: ${ev.name}\n📍 ${city} — ${ev.venue}\n🗓️ ${ev.date}`);
-  document.getElementById('done-sub').textContent =
-    `${ev.name} — ${city}. Я вже знаю, куди йдемо 😊 Скоро напишу!`;
-  go('s-done');
-  toast('Записав! Степан вже біжить по квитки 🏃‍♂️');
+  finish(`🎫 ОБРАЛА: ${ev.name}\n📍 ${city} — ${ev.venue}\n🗓️ ${ev.date}`);
 }
 
 render(eventsIF,'list-if','Івано-Франківськ',false);
@@ -623,11 +663,7 @@ const movies=[
   });
 })();
 function pickMovie(m){
-  notify(`🎬 Маряна обрала кіно: ${m.name}\n🕒 сеанси: ${m.times.join(', ')}\n⏱️ ${m.duration}`);
-  document.getElementById('done-sub').textContent =
-    `${m.name} — кіно 🍿. Я вже знаю! Скоро напишу, коли йдемо 😊`;
-  go('s-done');
-  toast('Записав! Беремо попкорн 🍿');
+  finish(`🎬 КІНО: ${m.name}\n🕒 сеанси: ${m.times.join(', ')}\n⏱️ ${m.duration}`);
 }
 
 /* ═══════════════ ТВІЙ ВИБІР ═══════════════ */
@@ -652,24 +688,14 @@ function sendPotato(){
   const from=document.getElementById('p-from').value;
   const to=document.getElementById('p-to').value;
   if(!date){ toast('Вибери день 🥔'); return; }
-  const when=formatDate(date);
-  notify(`🥔 Маряна кличе ЗБИРАТИ КАРТОПЛЮ!\n🗓️ ${when}\n⏰ ${from} – ${to}`);
-  document.getElementById('done-sub').textContent =
-    `Збираємо картоплю ${when}, ${from}–${to} 🥔 Записав, беру відро!`;
-  go('s-done');
-  toast('Записав! Беру лопату 🪏');
+  finish(`🥔 ЗБИРАТИ КАРТОПЛЮ\n🗓️ ${formatDate(date)}\n⏰ ${from} – ${to}`);
 }
 function sendHay(){
   const date=document.getElementById('h-date').value;
   const from=document.getElementById('h-from').value;
   const to=document.getElementById('h-to').value;
   if(!date){ toast('Вибери день 🌾'); return; }
-  const when=formatDate(date);
-  notify(`🌾 Маряна хоче помогти із сіном!\n🗓️ ${when}\n⏰ ${from} – ${to}`);
-  document.getElementById('done-sub').textContent =
-    `Сіно ${when}, ${from}–${to} 🌾 Записав, беру граблі!`;
-  go('s-done');
-  toast('Записав! Беру граблі 🌾');
+  finish(`🌾 ПОМОГТИ ІЗ СІНОМ\n🗓️ ${formatDate(date)}\n⏰ ${from} – ${to}`);
 }
 function sendCustom(){
   const msg=document.getElementById('c-msg').value.trim();
@@ -677,11 +703,7 @@ function sendCustom(){
   const time=document.getElementById('c-time').value;
   if(!msg && !date){ toast('Напиши щось або вибери день 🙂'); return; }
   const when = date ? formatDate(date) + (time?`, ${time}`:'') : 'день ще не вибрала';
-  notify(`💌 ТВІЙ ВИБІР від Маряни:\n📝 ${msg||'(без тексту)'}\n🗓️ ${when}`);
-  document.getElementById('done-sub').textContent =
-    `${msg||'Твоя ідея'} — ${when}. Записав, скоро напишу 😊`;
-  go('s-done');
-  toast('Відправив Степану 💛');
+  finish(`💌 ТВІЙ ВИБІР\n📝 ${msg||'(без тексту)'}\n🗓️ ${when}`);
 }
 
 /* ═══════════════ ПОСЛУГИ ═══════════════ */
