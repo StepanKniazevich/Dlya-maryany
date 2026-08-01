@@ -306,7 +306,9 @@
           <button class="btn btn-yes" onclick="go('s-ev-movies')">🎬 Кіно</button>
           <button class="btn btn-ghost" onclick="go('s-ev-tickets')">🎟️ Квитки, які вже є на руках</button>
           <button class="btn btn-ghost" onclick="go('s-ev-potato')">🥔 Збирати картоплю</button>
+          <button class="btn btn-ghost" onclick="go('s-ev-hay')">🌾 Помогти із сіном</button>
           <button class="btn btn-ghost" onclick="go('s-ev-custom')">💌 Твій вибір</button>
+          <button class="btn btn-ghost" onclick="openSvc()">😎 Послуги Степана</button>
         </div>
       </section>
 
@@ -367,6 +369,25 @@
         <button class="back" onclick="go('s-events')">← до вибору</button>
       </section>
 
+      <!-- Помогти із сіном -->
+      <section class="screen" id="s-ev-hay">
+        <span class="big-emoji">🌾</span>
+        <h1 class="title">Помогти із сіном</h1>
+        <p class="sub">Гуртом веселіше 😄 Вибери день і час</p>
+        <div class="custom">
+          <label class="field-label" for="h-date">Коли?</label>
+          <input id="h-date" class="field" type="date">
+          <label class="field-label">Часовий відрізок</label>
+          <div class="dt">
+            <input id="h-from" class="field" type="time" value="08:00">
+            <span class="dt-sep">—</span>
+            <input id="h-to" class="field" type="time" value="12:00">
+          </div>
+          <button class="btn btn-yes btn-full" onclick="sendHay()">Відправити Степану 🌾</button>
+        </div>
+        <button class="back" onclick="go('s-events')">← до вибору</button>
+      </section>
+
       <!-- Твій вибір -->
       <section class="screen" id="s-ev-custom">
         <span class="big-emoji">💌</span>
@@ -399,15 +420,6 @@
 
     </div>
   </main>
-
-  <!-- Плаваючі кнопки -->
-  <div class="float-wrap" id="floats">
-    <button class="svc-btn" onclick="openSvc()">😎 Послуги Степана</button>
-    <div class="float" id="hay">
-      <a href="https://t.me/+380979018207" target="_blank" rel="noopener">🌾 Поможи робити сіно</a>
-      <button title="Прикрити" onclick="document.getElementById('hay').remove()">✕</button>
-    </div>
-  </div>
 
   <!-- Модалка послуг -->
   <div class="modal" id="svc-modal" onclick="if(event.target===this)closeSvc()">
@@ -628,6 +640,7 @@ function pickMovie(m){
   const today=new Date().toISOString().split('T')[0];
   const d=document.getElementById('c-date'); if(d) d.min=today;
   const p=document.getElementById('p-date'); if(p) p.min=today;
+  const h=document.getElementById('h-date'); if(h) h.min=today;
 })();
 function formatDate(iso){
   const m=['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
@@ -645,6 +658,18 @@ function sendPotato(){
     `Збираємо картоплю ${when}, ${from}–${to} 🥔 Записав, беру відро!`;
   go('s-done');
   toast('Записав! Беру лопату 🪏');
+}
+function sendHay(){
+  const date=document.getElementById('h-date').value;
+  const from=document.getElementById('h-from').value;
+  const to=document.getElementById('h-to').value;
+  if(!date){ toast('Вибери день 🌾'); return; }
+  const when=formatDate(date);
+  notify(`🌾 Маряна хоче помогти із сіном!\n🗓️ ${when}\n⏰ ${from} – ${to}`);
+  document.getElementById('done-sub').textContent =
+    `Сіно ${when}, ${from}–${to} 🌾 Записав, беру граблі!`;
+  go('s-done');
+  toast('Записав! Беру граблі 🌾');
 }
 function sendCustom(){
   const msg=document.getElementById('c-msg').value.trim();
