@@ -1,714 +1,594 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Для Маряни 🌼</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mouthful — an English pronunciation climb</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --sky-top:#FBE7C6; --sky-mid:#F8CF9B; --sky-bottom:#F3B27E;
-    --cream:#FFF8EE; --cream-2:#FFEFD9;
-    --honey:#E9A23B; --tangerine:#EF8A4B; --coral:#E2765A;
-    --meadow:#7C9A54; --pine:#4F6B3A; --plum:#9A7794; --plum-deep:#6E5270;
-    --cocoa:#4A3524; --cocoa-soft:#8A6E5B;
-    --card:rgba(255,250,242,.86);
-    --shadow:0 18px 50px -18px rgba(74,53,36,.45);
-    --radius:26px;
+    --bg:#16121f; --bg2:#1e1830; --panel:#271f3d; --panel2:#2f2547;
+    --line:#3d3358; --ink:#f3eeff; --muted:#a99cc7;
+    --amber:#ffbf69; --amber-deep:#ff9e3d;
+    --mint:#6ee7c7; --coral:#ff7a7a; --violet:#b794f6;
+    --shadow: 0 18px 50px -20px rgba(0,0,0,.7);
+    --easy:var(--mint); --medium:var(--amber); --hard:var(--coral); --expert:var(--violet);
   }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{
-    font-family:'Nunito',system-ui,sans-serif;
-    color:var(--cocoa);
-    min-height:100dvh;
-    background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 45%,var(--sky-bottom) 100%);
-    overflow-x:hidden;
-    display:flex;align-items:center;justify-content:center;
-    padding:clamp(16px,4vw,40px);
-    position:relative;
+    margin:0; background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(183,148,246,.14), transparent 60%),
+      radial-gradient(900px 500px at -10% 20%, rgba(255,158,61,.10), transparent 55%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
+    color:var(--ink); font-family:"Space Grotesk",system-ui,sans-serif;
+    line-height:1.5; min-height:100vh; overflow-x:hidden;
   }
+  ::selection{background:var(--amber);color:#1a1226}
 
-  /* ── Фон: сонце + гори ── */
-  .sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-  .sun{
-    position:absolute;top:8%;right:12%;
-    width:clamp(120px,26vw,220px);aspect-ratio:1;border-radius:50%;
-    background:radial-gradient(circle at 50% 50%,#FFF3D6 0%,#FFD98A 40%,rgba(255,201,120,0) 72%);
-    animation:breathe 8s ease-in-out infinite;
-  }
-  @keyframes breathe{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.06);opacity:1}}
-  .mountains{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(46vh,420px)}
-  .mountains svg{width:100%;height:100%;display:block}
-  .haze{position:absolute;left:0;right:0;bottom:0;height:26%;
-    background:linear-gradient(180deg,rgba(255,244,224,0) 0%,rgba(255,240,214,.55) 100%)}
+  /* ---------- HERO ---------- */
+  header{max-width:960px;margin:0 auto;padding:64px 24px 24px;text-align:center;position:relative}
+  .eyebrow{font-family:"Space Mono",monospace;letter-spacing:.35em;text-transform:uppercase;
+    font-size:12px;color:var(--amber);margin:0 0 18px}
+  h1{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(56px,13vw,124px);
+    line-height:.9;margin:0;letter-spacing:-.02em;
+    background:linear-gradient(120deg,#fff 20%,var(--amber) 55%,var(--violet));
+    -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .sub{font-size:clamp(15px,2.2vw,19px);color:var(--muted);margin:20px auto 0;max-width:560px}
+  .sub b{color:var(--ink);font-weight:500}
+  .ua{font-size:14px;color:var(--muted);margin-top:6px;font-style:italic}
 
-  /* ── Картка ── */
-  .stage{position:relative;z-index:2;width:100%;max-width:480px}
-  .card{
-    background:var(--card);
-    backdrop-filter:blur(6px);
-    border:1.5px solid rgba(233,162,59,.35);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:clamp(26px,7vw,40px) clamp(22px,6vw,38px) clamp(30px,7vw,40px);
-    text-align:center;
-  }
-  .screen{display:none;animation:rise .55s cubic-bezier(.2,.8,.25,1)}
-  .screen.active{display:block}
-  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  /* waveform under title */
+  .wave{display:flex;gap:5px;justify-content:center;align-items:flex-end;height:34px;margin:26px 0 0}
+  .wave i{width:5px;background:linear-gradient(var(--amber),var(--violet));border-radius:4px;
+    height:30%;animation:idle 1.6s ease-in-out infinite}
+  .wave i:nth-child(odd){animation-delay:.2s}
+  .wave i:nth-child(3n){animation-delay:.4s}
+  .wave i:nth-child(4n){animation-delay:.6s}
+  @keyframes idle{0%,100%{height:22%}50%{height:85%}}
 
-  .eyebrow{font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-    font-size:.72rem;color:var(--tangerine);margin-bottom:.6rem}
-  .title{font-family:'Caveat',cursive;line-height:1.02;color:var(--cocoa);
-    font-size:clamp(2.3rem,9vw,3.4rem);font-weight:700}
-  .sub{margin-top:.7rem;color:var(--cocoa-soft);font-size:clamp(.98rem,3.6vw,1.08rem);line-height:1.5}
-  .big-emoji{font-size:clamp(3rem,14vw,4.4rem);line-height:1;margin-bottom:.4rem;display:block}
+  /* progress bar */
+  .hud{max-width:640px;margin:34px auto 0;background:var(--panel);border:1px solid var(--line);
+    border-radius:18px;padding:16px 20px;box-shadow:var(--shadow)}
+  .hud-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .hud-top .label{font-family:"Space Mono",monospace;font-size:13px;color:var(--muted);letter-spacing:.05em}
+  .hud-top .stars{font-family:"Space Mono",monospace;color:var(--amber);font-weight:700}
+  .bar{height:10px;background:#160f26;border-radius:99px;margin-top:12px;overflow:hidden;border:1px solid var(--line)}
+  .bar span{display:block;height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--mint),var(--amber),var(--coral));transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .hint{font-size:13px;color:var(--muted);margin-top:22px}
+  .hint kbd{font-family:"Space Mono",monospace;background:var(--panel2);border:1px solid var(--line);
+    padding:1px 7px;border-radius:6px;color:var(--ink)}
 
-  /* ── Кнопки ── */
-  .btns{display:flex;gap:12px;margin-top:1.6rem;justify-content:center;flex-wrap:wrap}
-  .btn{
-    font-family:'Nunito';font-weight:800;font-size:1.02rem;
-    border:none;cursor:pointer;border-radius:16px;
-    padding:14px 26px;min-width:118px;
-    transition:transform .12s ease,box-shadow .2s ease,filter .2s ease;
-  }
-  .btn:active{transform:translateY(1px) scale(.99)}
-  .btn-yes{
-    color:#fff;
-    background:linear-gradient(135deg,var(--tangerine),var(--coral));
-    box-shadow:0 10px 22px -8px rgba(226,118,90,.75);
-  }
-  .btn-yes:hover{filter:brightness(1.05)}
-  .btn-no{
-    color:var(--pine);background:#fff;
-    border:2px solid rgba(79,107,58,.35);
-  }
-  .btn-no:hover{filter:brightness(.98)}
-  .btn-ghost{
-    color:var(--cocoa);background:var(--cream-2);
-    border:2px solid rgba(233,162,59,.4);font-weight:700;
-  }
-  .btn-full{width:100%}
-  .btn:focus-visible{outline:3px solid var(--honey);outline-offset:3px}
-  .btn:disabled{opacity:.5;cursor:not-allowed;filter:none}
+  /* accent switch */
+  .accent{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:99px;
+    padding:4px;margin-top:20px;gap:2px}
+  .accent button{all:unset;cursor:pointer;font-family:"Space Mono",monospace;font-size:12px;
+    letter-spacing:.08em;padding:7px 16px;border-radius:99px;color:var(--muted);transition:.2s}
+  .accent button[aria-pressed="true"]{background:var(--amber);color:#1a1226;font-weight:700}
 
-  /* ── Коти настрою ── */
-  .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1.4rem}
-  .cat{padding:0;border:3px solid transparent;border-radius:16px;overflow:hidden;cursor:pointer;
-    background:var(--cream-2);aspect-ratio:1;position:relative;
-    transition:transform .12s,border-color .2s,box-shadow .2s}
-  .cat img{width:100%;height:100%;object-fit:cover;display:block}
-  .cat:hover{transform:translateY(-2px)}
-  .cat.selected{border-color:var(--coral);box-shadow:0 8px 20px -8px rgba(226,118,90,.7);transform:translateY(-2px)}
-  .cat.selected::after{content:'💛';position:absolute;top:5px;right:6px;font-size:1.15rem;
-    filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
-  .cat.noimg{display:flex;align-items:center;justify-content:center;font-size:2.4rem}
-  .cat.noimg::before{content:'🐱'}
-  @media (max-width:380px){.cats{grid-template-columns:repeat(2,1fr)}}
+  /* ---------- TRAIL ---------- */
+  .trail-head{text-align:center;margin:70px 0 10px}
+  .trail-head h2{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(26px,5vw,40px);margin:0}
+  .trail-head p{color:var(--muted);margin:8px 0 0;font-size:15px}
 
-  /* ── Кнопка-втікач ── */
-  .btn-runaway{position:fixed;z-index:60;will-change:left,top;
-    transition:left .18s ease,top .18s ease}
+  .trail{max-width:880px;margin:30px auto 0;padding:0 20px 40px;position:relative}
+  .trail::before{content:"";position:absolute;top:20px;bottom:120px;left:50%;transform:translateX(-50%);
+    width:3px;background:repeating-linear-gradient(var(--line) 0 10px,transparent 10px 20px)}
+  .station{position:relative;display:grid;grid-template-columns:1fr 72px 1fr;align-items:center;
+    margin:14px 0;min-height:96px}
+  .station .node{grid-column:2;justify-self:center;z-index:2}
+  .station .card{grid-column:1;justify-self:end;text-align:right}
+  .station:nth-child(even) .card{grid-column:3;justify-self:start;text-align:left}
 
-  /* ── Список подій ── */
-  .menu{display:grid;gap:12px;margin-top:1.5rem}
-  .menu .btn{width:100%;text-align:center}
-  .events{display:grid;gap:12px;margin-top:1.4rem;text-align:left}
-  .event{
-    background:#fff;border:1.5px solid rgba(233,162,59,.28);
-    border-radius:18px;padding:14px 16px;
-    display:flex;flex-direction:column;gap:8px;
-  }
-  .event-name{font-weight:800;font-size:1.06rem;color:var(--cocoa);line-height:1.2}
-  .event-meta{font-size:.9rem;color:var(--cocoa-soft);line-height:1.4}
-  .event-tag{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--pine);background:rgba(124,154,84,.16);
-    border-radius:999px;padding:3px 10px;width:fit-content}
-  .event-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
-  .mini{font-family:'Nunito';font-weight:800;font-size:.9rem;border:none;cursor:pointer;
-    border-radius:12px;padding:9px 14px;text-decoration:none;display:inline-block;text-align:center}
-  .mini-pick{color:#fff;background:linear-gradient(135deg,var(--tangerine),var(--coral))}
-  .mini-link{color:var(--pine);background:var(--cream-2);border:1.5px solid rgba(79,107,58,.3)}
-  .back{background:none;border:none;color:var(--tangerine);font-weight:800;font-family:'Nunito';
-    cursor:pointer;font-size:.95rem;margin-top:1.2rem;padding:6px}
-  .note{margin-top:1rem;font-size:.85rem;color:var(--cocoa-soft)}
+  .node{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
+    font-family:"Space Mono",monospace;font-weight:700;font-size:15px;
+    background:var(--panel2);border:2px solid var(--line);color:var(--muted);position:relative}
+  .node.current{border-color:var(--amber);color:var(--amber);box-shadow:0 0 0 6px rgba(255,191,105,.12)}
+  .node.current::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--amber);
+    opacity:.6;animation:ping 1.8s cubic-bezier(0,.3,.5,1) infinite}
+  @keyframes ping{0%{transform:scale(.9);opacity:.6}70%,100%{transform:scale(1.5);opacity:0}}
+  .node.done{border-color:var(--mint);color:var(--mint);background:rgba(110,231,199,.10)}
+  .node.locked{opacity:.55}
 
-  /* ── Кіно ── */
-  .movie-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-  .rating{flex:0 0 auto;font-size:.72rem;font-weight:800;color:#fff;background:#E0416B;
-    border-radius:8px;padding:3px 9px;line-height:1.4}
-  .times{display:flex;flex-wrap:wrap;gap:6px}
-  .time-chip{font-size:.82rem;font-weight:800;color:var(--cocoa);background:var(--cream-2);
-    border:1px solid rgba(233,162,59,.35);border-radius:8px;padding:4px 9px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 18px;
+    max-width:300px;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;
+    box-shadow:0 8px 24px -18px #000}
+  .card:hover{transform:translateY(-3px);border-color:var(--amber);box-shadow:var(--shadow)}
+  .card:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+  .card.locked{cursor:not-allowed;opacity:.5}
+  .card.locked:hover{transform:none;border-color:var(--line);box-shadow:0 8px 24px -18px #000}
+  .card.done{border-color:rgba(110,231,199,.4)}
+  .card .w{font-family:"Fraunces",serif;font-size:24px;font-weight:600;letter-spacing:-.01em}
+  .card .ph{font-family:"Space Mono",monospace;font-size:13px;color:var(--amber);margin-top:2px}
+  .card.done .ph{color:var(--mint)}
+  .card .lvl{display:inline-block;font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;margin-top:8px;padding:2px 9px;border-radius:99px;border:1px solid currentColor}
+  .lvl.easy{color:var(--easy)} .lvl.medium{color:var(--medium)}
+  .lvl.hard{color:var(--hard)} .lvl.expert{color:var(--expert)}
 
-  /* ── Форма "Твій вибір" ── */
-  .custom{display:grid;gap:11px;margin-top:1.4rem;text-align:left}
-  .field-label{font-weight:800;font-size:.9rem;color:var(--cocoa);margin-top:2px}
-  .field{font-family:'Nunito';font-size:1rem;color:var(--cocoa);
-    background:#fff;border:1.5px solid rgba(233,162,59,.4);border-radius:14px;
-    padding:12px 14px;width:100%}
-  .field:focus{outline:none;border-color:var(--tangerine);box-shadow:0 0 0 3px rgba(239,138,75,.2)}
-  textarea.field{resize:vertical;min-height:74px}
-  .dt{display:flex;gap:10px}
-  .dt input{flex:1 1 0;min-width:0}
-  .dt-sep{align-self:center;font-weight:800;color:var(--cocoa-soft)}
-  .dt #c-date{flex:1 1 auto}
-  .dt #c-time{flex:0 0 108px}
-  a.btn{display:inline-block;text-decoration:none;text-align:center;line-height:1.2}
-  .ig-btn{color:#fff;border:none;
-    background:linear-gradient(135deg,#F58529,#DD2A7B 55%,#8134AF)}
-  .ig-btn:hover{filter:brightness(1.05)}
-  .tg-btn{color:#fff;border:none;margin-top:1.4rem;
-    background:linear-gradient(135deg,#2AABEE,#229ED9)}
-  .tg-btn:hover{filter:brightness(1.05)}
-  .copybox{margin-top:12px;text-align:left;white-space:pre-wrap;word-break:break-word;
-    font-family:'Nunito';font-size:.88rem;line-height:1.45;background:#fff;color:var(--cocoa);
-    border:1.5px solid rgba(233,162,59,.35);border-radius:14px;padding:12px 14px;user-select:all}
+  /* summit / boss */
+  .summit{margin:40px auto 0;max-width:560px;text-align:center;position:relative;z-index:2}
+  .peak{font-size:44px;line-height:1;margin-bottom:6px;filter:drop-shadow(0 6px 18px rgba(255,122,122,.4))}
+  .boss-card{background:
+      radial-gradient(120% 120% at 50% 0%,rgba(183,148,246,.18),transparent 60%),var(--panel);
+    border:1px solid var(--violet);border-radius:22px;padding:26px 22px;cursor:pointer;
+    box-shadow:0 24px 60px -24px rgba(183,148,246,.5);transition:transform .2s,box-shadow .2s}
+  .boss-card:hover{transform:translateY(-4px);box-shadow:0 30px 70px -24px rgba(183,148,246,.7)}
+  .boss-card:focus-visible{outline:3px solid var(--violet);outline-offset:4px}
+  .boss-card.locked{cursor:not-allowed;opacity:.6;filter:grayscale(.4)}
+  .boss-card.locked:hover{transform:none}
+  .boss-card .tag{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--coral)}
+  .boss-card .w{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(22px,4.4vw,30px);
+    margin:10px 0 6px;line-height:1.15}
+  .boss-card .ph{font-family:"Space Mono",monospace;font-size:13px;color:var(--violet)}
+  .boss-card .lockmsg{font-size:13px;color:var(--muted);margin-top:10px}
 
-  /* ── Плаваючі кнопки ── */
-  .float-wrap{position:fixed;left:14px;bottom:14px;z-index:50;
-    display:flex;flex-direction:column;gap:10px;align-items:flex-start}
-  .float{display:flex;align-items:center;gap:8px;background:var(--cream);
-    border:1.5px solid rgba(233,162,59,.5);border-radius:999px;
-    box-shadow:var(--shadow);padding:9px 8px 9px 14px}
-  .float a{color:var(--cocoa);text-decoration:none;font-weight:800;font-size:.92rem;white-space:nowrap}
-  .float button{background:rgba(74,53,36,.08);border:none;color:var(--cocoa-soft);
-    width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:.9rem;line-height:1;flex:0 0 auto}
-  .float button:hover{background:rgba(74,53,36,.16)}
-  .svc-btn{background:linear-gradient(135deg,var(--honey),var(--tangerine));color:#fff;
-    border:none;border-radius:999px;padding:11px 18px;font-family:'Nunito';font-weight:800;
-    box-shadow:var(--shadow);cursor:pointer;font-size:.92rem}
+  /* ---------- MODAL ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(12,8,20,.72);backdrop-filter:blur(8px);
+    display:none;place-items:center;padding:20px;z-index:50}
+  .overlay.show{display:grid}
+  .modal{width:min(520px,100%);background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-radius:26px;padding:30px 26px;box-shadow:var(--shadow);
+    position:relative;animation:pop .28s cubic-bezier(.2,.9,.3,1.2)}
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal .close{position:absolute;top:16px;right:16px;all:unset;cursor:pointer;color:var(--muted);
+    font-size:22px;width:36px;height:36px;display:grid;place-items:center;border-radius:50%}
+  .modal .close:hover{background:var(--panel2);color:var(--ink)}
+  .m-lvl{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+  .m-word{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(30px,7vw,52px);
+    margin:8px 0 4px;line-height:1.05;letter-spacing:-.02em}
+  .m-ipa{font-family:"Space Mono",monospace;font-size:clamp(16px,3.5vw,20px);color:var(--amber);margin:0}
+  .m-tip{background:var(--panel2);border-left:3px solid var(--amber);border-radius:0 12px 12px 0;
+    padding:12px 16px;margin:20px 0;font-size:14.5px;color:#e7dffb}
+  .m-tip b{color:var(--amber)}
 
-  /* ── Модалка послуг ── */
-  .modal{position:fixed;inset:0;z-index:100;display:none;
-    background:rgba(74,53,36,.42);backdrop-filter:blur(3px);
-    align-items:center;justify-content:center;padding:20px}
-  .modal.open{display:flex}
-  .modal-card{background:var(--cream);border-radius:24px;max-width:400px;width:100%;
-    padding:26px 24px;box-shadow:var(--shadow);border:1.5px solid rgba(233,162,59,.4);
-    animation:rise .4s ease}
-  .modal-card h3{font-family:'Caveat';font-size:2.3rem;color:var(--cocoa);text-align:center;margin-bottom:.2rem}
-  .modal-card p{text-align:center;color:var(--cocoa-soft);font-size:.92rem;margin-bottom:1rem}
-  .svc-list{display:grid;gap:9px;text-align:left}
-  .svc{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;
-    padding:11px 14px;border:1px solid rgba(233,162,59,.25);font-weight:700;color:var(--cocoa)}
-  .svc small{color:var(--cocoa-soft);font-weight:600}
-  .svc .ico{font-size:1.35rem;flex:0 0 auto}
-  .modal .close{margin-top:1.2rem;width:100%}
+  .m-wave{display:flex;gap:4px;justify-content:center;align-items:flex-end;height:40px;margin:6px 0 18px}
+  .m-wave i{width:5px;height:20%;background:var(--line);border-radius:4px;transition:background .2s}
+  .m-wave.playing i{background:linear-gradient(var(--amber),var(--violet));animation:idle 1s ease-in-out infinite}
+  .m-wave.playing i:nth-child(2n){animation-delay:.15s}
+  .m-wave.playing i:nth-child(3n){animation-delay:.3s}
 
-  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(40px);
-    background:var(--pine);color:#fff;padding:13px 22px;border-radius:999px;font-weight:800;
-    box-shadow:var(--shadow);z-index:120;opacity:0;transition:.35s;pointer-events:none;max-width:90vw;text-align:center}
+  .btns{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{flex:1;min-width:130px;all:unset;box-sizing:border-box;cursor:pointer;text-align:center;
+    padding:14px;border-radius:14px;font-weight:700;font-size:15px;transition:.18s;border:1px solid transparent}
+  .btn:focus-visible{outline:3px solid #fff;outline-offset:2px}
+  .btn-listen{background:var(--amber);color:#1a1226}
+  .btn-listen:hover{background:var(--amber-deep)}
+  .btn-slow{background:var(--panel2);color:var(--ink);border-color:var(--line);flex:0 0 auto;min-width:0;padding:14px 16px}
+  .btn-slow:hover{border-color:var(--amber)}
+  .btn-say{background:transparent;color:var(--mint);border-color:var(--mint)}
+  .btn-say:hover{background:rgba(110,231,199,.12)}
+  .btn-say.rec{background:var(--coral);color:#2a0d0d;border-color:var(--coral);animation:rec 1s infinite}
+  @keyframes rec{50%{box-shadow:0 0 0 8px rgba(255,122,122,.18)}}
+
+  .feedback{margin-top:18px;min-height:26px;text-align:center;font-size:15px;font-weight:500}
+  .heard{font-family:"Space Mono",monospace;color:var(--muted);font-size:13px}
+  .feedback.good{color:var(--mint)} .feedback.bad{color:var(--coral)}
+  .self{margin-top:14px;text-align:center}
+  .self button{all:unset;cursor:pointer;font-size:13px;color:var(--muted);border-bottom:1px dotted var(--muted)}
+  .self button:hover{color:var(--ink)}
+
+  .m-next{display:none;margin-top:18px;width:100%}
+  .m-next.show{display:block}
+  .btn-next{width:100%;background:linear-gradient(90deg,var(--mint),var(--amber));color:#12281f;
+    text-align:center;padding:15px;border-radius:14px;font-weight:700;cursor:pointer;font-size:15px;border:none}
+
+  /* toast + confetti */
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+    background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:12px 20px;
+    border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:60;box-shadow:var(--shadow)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .confetti{position:fixed;top:-12px;width:9px;height:14px;z-index:70;pointer-events:none;border-radius:2px}
 
-  @media (prefers-reduced-motion:reduce){
-    .sun{animation:none}
-    .screen{animation:none}
-    .btn-runaway{transition:none}
+  footer{text-align:center;padding:50px 20px 60px;color:var(--muted);font-size:13px}
+  footer b{color:var(--ink);font-weight:500}
+
+  /* win banner */
+  .win{max-width:560px;margin:0 auto;text-align:center;padding:0 20px}
+  .win-card{display:none;background:linear-gradient(180deg,rgba(110,231,199,.12),var(--panel));
+    border:1px solid var(--mint);border-radius:22px;padding:28px;box-shadow:var(--shadow)}
+  .win-card.show{display:block}
+  .win-card h3{font-family:"Fraunces",serif;font-size:28px;margin:0 0 6px}
+  .win-card p{color:var(--muted);margin:0}
+  .reset{all:unset;cursor:pointer;margin-top:16px;font-family:"Space Mono",monospace;font-size:12px;
+    color:var(--amber);border:1px solid var(--line);padding:9px 18px;border-radius:99px}
+  .reset:hover{border-color:var(--amber)}
+
+  @media(max-width:600px){
+    .trail::before{left:26px}
+    .station{grid-template-columns:52px 1fr;gap:14px}
+    .station .node{grid-column:1;justify-self:center}
+    .station .card,.station:nth-child(even) .card{grid-column:2;justify-self:stretch;text-align:left;max-width:none}
+    .card .w{font-size:21px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto}
+    .wave i,.m-wave.playing i{height:55%!important}
   }
 </style>
 </head>
 <body>
 
-  <div class="sky" aria-hidden="true">
-    <div class="sun"></div>
-    <div class="mountains">
-      <svg viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice">
-        <path fill="#9A7794" opacity=".55" d="M0,175 L120,88 L260,150 L400,66 L560,140 L720,58 L880,128 L1040,78 L1200,150 L1340,90 L1440,138 L1440,320 L0,320 Z"/>
-        <path fill="#7C9A54" opacity=".82" d="M0,222 L160,150 L320,202 L480,140 L640,202 L800,150 L980,212 L1140,160 L1300,212 L1440,180 L1440,320 L0,320 Z"/>
-        <path fill="#4F6B3A" d="M0,262 L180,214 L360,256 L540,208 L720,256 L900,214 L1080,260 L1260,220 L1440,256 L1440,320 L0,320 Z"/>
-      </svg>
-    </div>
-    <div class="haze"></div>
+<header>
+  <p class="eyebrow">Pronunciation Trainer</p>
+  <h1>Mouthful</h1>
+  <div class="wave" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+  <p class="sub">Climb through <b>18 troublesome English words</b> — every silent letter, sneaky vowel and cruel consonant cluster — up to a summit tongue-twister that humbles even C1 speakers.</p>
+  <p class="ua">Тренажер вимови для твоїх студентів — слухай, повторюй, і хай гра перевірить.</p>
+
+  <div class="accent" role="group" aria-label="Accent">
+    <button id="uk" aria-pressed="true">🇬🇧 British</button>
+    <button id="us" aria-pressed="false">🇺🇸 American</button>
   </div>
 
-  <main class="stage">
-    <div class="card">
-
-      <!-- 1. Маряна? -->
-      <section class="screen active" id="s-start">
-        <div class="eyebrow">Агов 🌼</div>
-        <h1 class="title">А ти Маряна?</h1>
-        <div class="btns">
-          <button class="btn btn-yes" onclick="onMaryanaYes()">Так</button>
-          <button class="btn btn-no" onclick="go('s-not-maryana')">Ні</button>
-        </div>
-      </section>
-
-      <!-- поклич Маряну -->
-      <section class="screen" id="s-not-maryana">
-        <span class="big-emoji">🙏</span>
-        <h1 class="title">Тоді поклич Маряну</h1>
-        <p class="sub">Тут дуже важлива справа, чесно 🙂</p>
-        <div class="btns">
-          <button class="btn btn-yes btn-full" onclick="go('s-start')">Вже коло мене 🏃‍♀️</button>
-        </div>
-      </section>
-
-      <!-- настрій-киця -->
-      <section class="screen" id="s-mood">
-        <div class="eyebrow">Як настрій, Маряно? 😽</div>
-        <h1 class="title">Яка ти сьогодні киця?</h1>
-        <p class="sub">Тиць по своїй киці настрою 🐾</p>
-        <div class="cats" id="cat-grid"></div>
-        <div class="btns">
-          <button class="btn btn-yes btn-full" id="mood-next" onclick="moodNext()" disabled>Це моя киця → Далі</button>
-        </div>
-      </section>
-
-      <!-- 2. з Яблуниці? -->
-      <section class="screen" id="s-yablunytsia">
-        <div class="eyebrow">Файно 💛</div>
-        <h1 class="title">Ти з Яблуниці?</h1>
-        <div class="btns">
-          <button class="btn btn-yes" onclick="onYabYes()">Так</button>
-          <button class="btn btn-no" onclick="go('s-yab-no')">Ні</button>
-        </div>
-      </section>
-
-      <!-- не бреши -->
-      <section class="screen" id="s-yab-no">
-        <span class="big-emoji">😉</span>
-        <h1 class="title">Не бреши мені</h1>
-        <p class="sub">Я ж знаю, шо ти з Яблуниці)</p>
-        <div class="btns">
-          <button class="btn btn-yes btn-full" onclick="onYabYes()">Ну добре, з Яблуниці 🙈</button>
-        </div>
-      </section>
-
-      <!-- файно є -->
-      <section class="screen" id="s-yab-yes">
-        <span class="big-emoji">🌸</span>
-        <h1 class="title">Файно є!</h1>
-        <p class="sub">Знав, шо ми одної крові з тими горами 🏔️</p>
-        <div class="btns">
-          <button class="btn btn-yes btn-full" onclick="go('s-concert')">Далі →</button>
-        </div>
-      </section>
-
-      <!-- 3. концерт? -->
-      <section class="screen" id="s-concert">
-        <div class="eyebrow">Головне питання 🎶</div>
-        <h1 class="title">Чи хотіла б ти піти на концерт зі Степаном?</h1>
-        <div class="btns" id="concert-btns">
-          <button class="btn btn-yes" onclick="onConcertYes()">Так</button>
-          <button class="btn btn-no btn-runaway" id="runaway" onmouseenter="dodge()" onmousemove="dodge()">Ні</button>
-        </div>
-        <p class="note">* «Ні» чомусь не хоче натискатись 🤷‍♂️</p>
-      </section>
-
-      <!-- меню подій -->
-      <section class="screen" id="s-events">
-        <span class="big-emoji">🎉</span>
-        <h1 class="title">Йухууу! Тоді вибирай</h1>
-        <p class="sub">Куди хочеш?</p>
-        <div class="menu">
-          <button class="btn btn-yes" onclick="go('s-ev-if')">🎭 Івенти Івано-Франківськ</button>
-          <button class="btn btn-yes" onclick="go('s-ev-yaremche')">⛰️ Івенти Яремче</button>
-          <button class="btn btn-yes" onclick="go('s-ev-kolomyia')">🏛️ Івенти Коломия</button>
-          <button class="btn btn-yes" onclick="go('s-ev-movies')">🎬 Кіно</button>
-          <button class="btn btn-ghost" onclick="go('s-ev-tickets')">🎟️ Квитки, які вже є на руках</button>
-          <button class="btn btn-ghost" onclick="go('s-ev-potato')">🥔 Збирати картоплю</button>
-          <button class="btn btn-ghost" onclick="go('s-ev-hay')">🌾 Помогти із сіном</button>
-          <button class="btn btn-ghost" onclick="go('s-ev-custom')">💌 Твій вибір</button>
-          <button class="btn btn-ghost" onclick="openSvc()">😎 Послуги Степана</button>
-        </div>
-      </section>
-
-      <!-- Івано-Франківськ -->
-      <section class="screen" id="s-ev-if">
-        <h1 class="title">Івано-Франківськ</h1>
-        <div class="events" id="list-if"></div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- Яремче -->
-      <section class="screen" id="s-ev-yaremche">
-        <h1 class="title">Яремче</h1>
-        <div class="events" id="list-yaremche"></div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- Коломия -->
-      <section class="screen" id="s-ev-kolomyia">
-        <h1 class="title">Коломия</h1>
-        <div class="events" id="list-kolomyia"></div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- Кіно -->
-      <section class="screen" id="s-ev-movies">
-        <span class="big-emoji">🍿</span>
-        <h1 class="title">Кіно</h1>
-        <p class="sub">Або можемо просто в кіно 😊</p>
-        <div class="events" id="list-movies"></div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- Квитки на руках -->
-      <section class="screen" id="s-ev-tickets">
-        <h1 class="title">Вже на руках 🎟️</h1>
-        <p class="sub">Ці квитки Степан вже має — тільки скажи 😌</p>
-        <div class="events" id="list-tickets"></div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- Садити картоплю -->
-      <section class="screen" id="s-ev-potato">
-        <span class="big-emoji">🥔</span>
-        <h1 class="title">Збирати картоплю</h1>
-        <p class="sub">Діло серйозне 😄 Вибери день і час</p>
-        <div class="custom">
-          <label class="field-label" for="p-date">Коли збираємо?</label>
-          <input id="p-date" class="field" type="date">
-          <label class="field-label">Часовий відрізок</label>
-          <div class="dt">
-            <input id="p-from" class="field" type="time" value="09:00">
-            <span class="dt-sep">—</span>
-            <input id="p-to" class="field" type="time" value="13:00">
-          </div>
-          <button class="btn btn-yes btn-full" onclick="sendPotato()">Відправити Степану 🥔</button>
-        </div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- Помогти із сіном -->
-      <section class="screen" id="s-ev-hay">
-        <span class="big-emoji">🌾</span>
-        <h1 class="title">Помогти із сіном</h1>
-        <p class="sub">Гуртом веселіше 😄 Вибери день і час</p>
-        <div class="custom">
-          <label class="field-label" for="h-date">Коли?</label>
-          <input id="h-date" class="field" type="date">
-          <label class="field-label">Часовий відрізок</label>
-          <div class="dt">
-            <input id="h-from" class="field" type="time" value="08:00">
-            <span class="dt-sep">—</span>
-            <input id="h-to" class="field" type="time" value="12:00">
-          </div>
-          <button class="btn btn-yes btn-full" onclick="sendHay()">Відправити Степану 🌾</button>
-        </div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- Твій вибір -->
-      <section class="screen" id="s-ev-custom">
-        <span class="big-emoji">💌</span>
-        <h1 class="title">Твій вибір</h1>
-        <p class="sub">Маєш свою ідею? Напиши і вибери день 😊</p>
-        <div class="custom">
-          <label class="field-label" for="c-msg">Що хочеш? Куди підемо?</label>
-          <textarea id="c-msg" class="field" rows="3" placeholder="Напр.: а може просто в гори на каву? ☕⛰️"></textarea>
-          <label class="field-label" for="c-date">Коли тобі зручно?</label>
-          <div class="dt">
-            <input id="c-date" class="field" type="date">
-            <input id="c-time" class="field" type="time" value="18:00">
-          </div>
-          <button class="btn btn-yes btn-full" onclick="sendCustom()">Відправити Степану 💛</button>
-          <a class="btn btn-full ig-btn" id="ig-link" href="https://instagram.com" target="_blank" rel="noopener">📸 Відкрити Instagram</a>
-        </div>
-        <button class="back" onclick="go('s-events')">← до вибору</button>
-      </section>
-
-      <!-- фінал -->
-      <section class="screen" id="s-done">
-        <span class="big-emoji">💛</span>
-        <h1 class="title" id="done-title">Ееее клас!</h1>
-        <p class="sub" id="done-sub">Я вже знаю, куди йдемо. Скоро напишу 😊</p>
-        <a id="tg-send" class="btn btn-full tg-btn" style="display:none" href="#" target="_blank" rel="noopener">📩 Надіслати Степану в Телеграм</a>
-        <pre id="done-copy" class="copybox" style="display:none"></pre>
-        <div class="btns">
-          <button class="btn btn-yes" onclick="openSvc()">Що вміє Степан 😎</button>
-          <button class="btn btn-ghost" onclick="go('s-events')">Змінити вибір</button>
-        </div>
-      </section>
-
+  <div class="hud">
+    <div class="hud-top">
+      <span class="label" id="progressLabel">Peaks conquered · 0/19</span>
+      <span class="stars" id="starLabel">★ 0</span>
     </div>
-  </main>
-
-  <!-- Модалка послуг -->
-  <div class="modal" id="svc-modal" onclick="if(event.target===this)closeSvc()">
-    <div class="modal-card">
-      <h3>Послуги від Степана</h3>
-      <p>Все по-господарськи 😌</p>
-      <div class="svc-list">
-        <div class="svc"><span class="ico">🍳</span> Готування</div>
-        <div class="svc"><span class="ico">🧹</span> Прибирання</div>
-        <div class="svc"><span class="ico">🌾</span> Косіння</div>
-        <div class="svc"><span class="ico">🐝</span> Бджоли і мед</div>
-        <div class="svc"><span class="ico">🧀</span> Домашня моцарела</div>
-        <div class="svc"><span class="ico">🎤</span> Співання</div>
-        <div class="svc"><span class="ico">📜</span> Декламування вірша <small>(короткого)</small></div>
-        <div class="svc"><span class="ico">🥃</span> Пити горівку <small>(але лиш на великі свята)</small></div>
-      </div>
-      <button class="btn btn-yes close" onclick="closeSvc()">Файно 💛</button>
-    </div>
+    <div class="bar"><span id="progressBar"></span></div>
   </div>
 
-  <div class="toast" id="toast"></div>
+  <p class="hint">Tap a station → <kbd>🔊 Listen</kbd> then <kbd>🎤 Say it</kbd>. The game listens back and checks you.</p>
+</header>
+
+<div class="trail-head">
+  <h2>The Ascent</h2>
+  <p>Base camp is easy. It gets meaner near the top.</p>
+</div>
+
+<main class="trail" id="trail"></main>
+
+<div class="win">
+  <div class="win-card" id="winCard">
+    <div style="font-size:40px">🏔️</div>
+    <h3>Summit reached.</h3>
+    <p>You conquered every sound, tongue-twister and all. Native speakers are nervous.</p>
+    <button class="reset" id="resetBtn">↺ Climb again</button>
+  </div>
+</div>
+
+<footer>Made for pronunciation practice · works best in <b>Chrome</b> or <b>Edge</b> (microphone check needs Web Speech). Listening works everywhere.</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mWord">
+    <button class="close" id="closeBtn" aria-label="Close">✕</button>
+    <span class="m-lvl" id="mLvl"></span>
+    <h2 class="m-word" id="mWord"></h2>
+    <p class="m-ipa" id="mIpa"></p>
+    <div class="m-tip" id="mTip"></div>
+
+    <div class="m-wave" id="mWave" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <div class="btns">
+      <button class="btn btn-listen" id="listenBtn">🔊 Listen</button>
+      <button class="btn btn-slow" id="slowBtn" title="Slow playback">🐢</button>
+      <button class="btn btn-say" id="sayBtn">🎤 Say it</button>
+    </div>
+
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="self"><button id="selfBtn">I said it right — mark it done →</button></div>
+
+    <div class="m-next" id="mNext">
+      <button class="btn-next" id="nextBtn">Next sound →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-/* ═══════════════ ТЕЛЕГРАМ ═══════════════
-   Працює у двох режимах:
+/* ---------------- DATA ---------------- */
+const WORDS = [
+  {w:"notice", ipa:"/ˈnəʊ.tɪs/", ipaUS:"/ˈnoʊ.t̬ɪs/", lvl:"easy",
+   tip:"First syllable is the diphthong <b>/əʊ/</b> — “NOH”. It ends in <b>/ɪs/</b>, not /aɪs/. Say “NOH-tiss”, never “no-tice”.", alt:[]},
+  {w:"period", ipa:"/ˈpɪə.ri.əd/", ipaUS:"/ˈpɪr.i.əd/", lvl:"easy",
+   tip:"Three syllables: <b>PEER-ee-uhd</b>. The “e” is not /e/ — it’s the /ɪə/ glide. Don’t say “pe-ri-od”.", alt:[]},
+  {w:"walk", ipa:"/wɔːk/", ipaUS:"/wɑːk/", lvl:"easy",
+   tip:"The <b>“l” is silent</b>. It’s just “wawk” with a long /ɔː/. No /l/ at all.", alt:["wok"]},
+  {w:"work", ipa:"/wɜːk/", ipaUS:"/wɜːrk/", lvl:"medium",
+   tip:"Vowel is <b>/ɜː/</b>, not /ɔː/. Feel the contrast: <b>walk</b> = /ɔː/, <b>work</b> = /ɜː/. Two different words.", alt:[]},
+  {w:"flood", ipa:"/flʌd/", ipaUS:"/flʌd/", lvl:"medium",
+   tip:"Here “oo” = <b>/ʌ/</b>, like in <i>blood</i> and <i>mud</i> — <b>not</b> /uː/. It rhymes with “mud”, never “mood”.", alt:[]},
+  {w:"rarely", ipa:"/ˈreə.li/", ipaUS:"/ˈrer.li/", lvl:"medium",
+   tip:"Just <b>two</b> syllables: RARE-lee. Mind the /r/ + /eə/ opening, and a light final /li/ — no heavy “L”.", alt:[]},
+  {w:"mountains", ipa:"/ˈmaʊn.tɪnz/", ipaUS:"/ˈmaʊn.tənz/", lvl:"medium",
+   tip:"The “-tains” collapses to <b>/tɪnz/</b> (weak vowel), NOT “-taynes”. Say “MOWN-tinz”.", alt:["mountain"]},
+  {w:"clothes", ipa:"/kləʊðz/", ipaUS:"/kloʊðz/", lvl:"hard",
+   tip:"The “th” is voiced <b>/ð/</b> and usually swallowed into /z/ — most natives say <b>/kləʊz/</b>, exactly like “close”. Don’t add an extra syllable.", alt:["close","cloth"]},
+  {w:"thorough", ipa:"/ˈθʌr.ə/", ipaUS:"/ˈθɜː.roʊ/", lvl:"hard",
+   tip:"Starts with the <b>unvoiced /θ/</b> (tongue between teeth). UK: “THUH-ruh”. It is not <i>through</i> and not <i>throw</i>.", alt:[]},
+  {w:"February", ipa:"/ˈfeb.ru.ər.i/", ipaUS:"/ˈfeb.juˌer.i/", lvl:"hard",
+   tip:"Don’t drop the first <b>“r/u”</b>: “FEB-roo-uh-ree”. The trap is the two r’s close together.", alt:[]},
+  {w:"vegetable", ipa:"/ˈvedʒ.tə.bəl/", ipaUS:"/ˈvedʒ.tə.bəl/", lvl:"hard",
+   tip:"Only <b>three</b> syllables: “VEJ-tuh-buhl”. The middle “e” disappears — not “ve-ge-ta-ble”.", alt:[]},
+  {w:"comfortable", ipa:"/ˈkʌmf.tə.bəl/", ipaUS:"/ˈkʌmf.tər.bəl/", lvl:"hard",
+   tip:"Natives say <b>three</b> syllables: “KUMF-tuh-buhl”. The “-or-” vanishes. Not “com-for-ta-ble”.", alt:[]},
+  {w:"Wednesday", ipa:"/ˈwenz.deɪ/", ipaUS:"/ˈwenz.deɪ/", lvl:"hard",
+   tip:"The middle <b>“d” is silent</b>. Two syllables: “WENZ-day”. Not “wed-nes-day”.", alt:["wensday"]},
+  {w:"conscientious", ipa:"/ˌkɒn.ʃiˈen.ʃəs/", ipaUS:"/ˌkɑːn.ʃiˈen.ʃəs/", lvl:"expert",
+   tip:"Two “sh” sounds: “sci” = <b>/ʃi/</b>, “-tious” = <b>/ʃəs/</b>. Stress the <b>EN</b>: “kon-shee-EN-shuss”. Not “conscience-tious”.", alt:[]},
+  {w:"colonel", ipa:"/ˈkɜː.nəl/", ipaUS:"/ˈkɝː.nəl/", lvl:"expert",
+   tip:"It sounds <b>exactly like “kernel”</b>. The “o” and “l” are pure trickery: “KER-nuhl”.", alt:["kernel"]},
+  {w:"squirrel", ipa:"/ˈskwɪr.əl/", ipaUS:"/ˈskwɜːr.əl/", lvl:"expert",
+   tip:"UK two syllables: “SKWIRR-uhl”. The /skw/ cluster crashing into /r/ is the classic learner-breaker.", alt:["squirl"]},
+  {w:"rural", ipa:"/ˈrʊə.rəl/", ipaUS:"/ˈrʊr.əl/", lvl:"expert",
+   tip:"<b>Two /r/ sounds</b> almost touching: “ROOR-uhl”. Keep the tongue relaxed and don’t let them merge into one.", alt:[]},
+  {w:"pronunciation", ipa:"/prəˌnʌn.siˈeɪ.ʃən/", ipaUS:"/prəˌnʌn.siˈeɪ.ʃən/", lvl:"expert",
+   tip:"The meta-trap: it’s “pro-NUN-see-AY-shun”. There is <b>no “noun”</b> in it — never “pro-NOUN-ciation”.", alt:[]}
+];
 
-   А) ПРОСТИЙ (нічого не треба): після вибору відкривається ТВІЙ чат у Телеграмі,
-      а вибір Маряни копіюється — їй лишається вставити й надіслати.
-      Впиши свій контакт у 'contact' нижче (краще свій @нік — надійніше за номер).
-
-   Б) АВТОМАТ (приходить само, без її «надіслати»): зроби бота й впиши token + chatId.
-      1) @BotFather → /newbot → ТОКЕН.
-      2) Напиши своєму боту будь-що.
-      3) @userinfobot → пришле твій chat_id (число).
-      Встав обидва нижче — і вибори летять тобі тихо самі.
-      Увага: токен у коді видно всім, хто гляне сайт. Для жарту ок; при потребі /revoke у BotFather. */
-const TG = {
-  token: '8802005323:AAF7v55Co52Mtxk_9O0tMu7nGitrQPtKFwY',
-  chatId: '355618733',
-  contact: 'https://t.me/st_kniazevych'
+const BOSS = {
+  w:"The sixth sick sheikh’s sixth sheep’s sick.",
+  speak:"The sixth sick sheikh's sixth sheep's sick.",
+  ipa:"/ðə sɪksθ sɪk ʃeɪks sɪksθ ʃiːps sɪk/",
+  ipaUS:"/ðə sɪksθ sɪk ʃeɪks sɪksθ ʃiːps sɪk/",
+  lvl:"expert",
+  tip:"Widely called the hardest phrase in English. You’re machine-gunning between <b>/s/</b> and <b>/ʃ/</b> while surviving the brutal <b>/ksθ/</b> in “sixth”. Slow. Right. Then speed up.",
+  alt:["the sixth sick sheiks sixth sheeps sick","sixth sick sheikh sixth sheep sick","the six sick sheiks six sheep sick"]
 };
-function botOn(){ return TG.token && !TG.token.startsWith('PASTE'); }
-async function notify(text, preview=false){
-  if(!TG.token || TG.token.startsWith('PASTE')){ console.log('[Telegram]', text); return; }
-  try{
-    await fetch(`https://api.telegram.org/bot${TG.token}/sendMessage`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ chat_id: TG.chatId, text, disable_web_page_preview:!preview })
-    });
-  }catch(e){ console.warn('Telegram notify failed', e); }
+
+/* ---------------- STATE ---------------- */
+let accent = "uk";                 // uk | us
+let cleared = new Set();           // indices done; "boss" for boss
+let activeIndex = null;            // current modal target (number or "boss")
+const TOTAL = WORDS.length + 1;    // 19
+
+/* ---------------- ELEMENTS ---------------- */
+const trailEl = document.getElementById("trail");
+const overlay = document.getElementById("overlay");
+const el = id => document.getElementById(id);
+
+/* ---------------- SPEECH SYNTH ---------------- */
+let voices = [];
+function loadVoices(){ voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; }
+if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function pickVoice(lang){
+  if(!voices.length) loadVoices();
+  const pref = lang==="en-GB"
+    ? ["Google UK English","Daniel","Kate","Serena","English (United Kingdom)"]
+    : ["Google US English","Samantha","Alex","Aaron","English (United States)"];
+  for(const name of pref){ const v = voices.find(v=>v.name.includes(name)); if(v) return v; }
+  return voices.find(v=>v.lang===lang) || voices.find(v=>v.lang && v.lang.startsWith("en")) || null;
+}
+function speak(text, rate=0.9){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const lang = accent==="uk" ? "en-GB" : "en-US";
+  u.lang = lang; u.rate = rate; u.pitch = 1;
+  const v = pickVoice(lang); if(v) u.voice = v;
+  const wave = el("mWave");
+  u.onstart = ()=> wave && wave.classList.add("playing");
+  u.onend = u.onerror = ()=> wave && wave.classList.remove("playing");
+  speechSynthesis.speak(u);
 }
 
-/* Instagram: встав свій нік (напр. 'stepan' або '@stepan'). Лишиш як є — відкриється просто instagram.com */
-const INSTAGRAM = 'PASTE_INSTAGRAM_USERNAME';
+/* ---------------- SPEECH RECOGNITION ---------------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognizing = false, recognizer = null;
 
-/* ═══════════════ НАВІГАЦІЯ ═══════════════ */
-function go(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  const el=document.getElementById(id);
-  el.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-  // ховаємо кнопку-втікач, коли не на екрані концерту
-  const r=document.getElementById('runaway');
-  if(id!=='s-concert'){ r.classList.remove('placed'); r.style.left=''; r.style.top=''; }
+function normalize(s){
+  return (s||"").toLowerCase()
+    .replace(/[’']/g,"")            // apostrophes out
+    .replace(/[^a-z\s]/g," ")
+    .replace(/\s+/g," ").trim();
 }
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600);
+function levenshtein(a,b){
+  const m=a.length,n=b.length; if(!m) return n; if(!n) return m;
+  const d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return d[m][n];
 }
+function ratio(a,b){ const L=Math.max(a.length,b.length); return L? 1-levenshtein(a,b)/L : 1; }
 
-/* збираємо, що вона робила, щоб включити у фінальне повідомлення */
-const milestones=[];
-async function finish(line){
-  const full=[...milestones, '— — —', line].join('\n');
-  const sub=document.getElementById('done-sub');
-  const tgBtn=document.getElementById('tg-send');
-  const box=document.getElementById('done-copy');
-  if(botOn()){
-    notify(line);                 // повідомлення-віхи вже пішли раніше; шлемо фінал
-    sub.textContent='Записав — скоро напишу 😊';
-    tgBtn.style.display='none';
-    box.style.display='none';
-  }else{
-    let copied=false;
-    try{ await navigator.clipboard.writeText(full); copied=true; }catch(e){}
-    sub.textContent = copied
-      ? 'Твій вибір скопійовано 💛 Тисни кнопку — відкриється Телеграм Степана, встав і надішли.'
-      : 'Тисни кнопку — відкриється Телеграм Степана. Скопіюй текст нижче і надішли 💛';
-    tgBtn.href = TG.contact;
-    tgBtn.style.display='block';
-    box.textContent=full;
-    box.style.display='block';
+function matches(target, heardList, alts, isPhrase){
+  const t = normalize(target);
+  const acc = [t, ...alts.map(normalize)];
+  for(let raw of heardList){
+    const h = normalize(raw);
+    if(!h) continue;
+    if(isPhrase){
+      const tw = t.split(" "), hw = new Set(h.split(" "));
+      const hit = tw.filter(w=>hw.has(w)).length / tw.length;
+      if(hit >= 0.6) return true;
+      if(acc.some(a=>ratio(a,h) >= 0.7)) return true;
+    }else{
+      if(acc.includes(h)) return true;
+      if(h.split(" ").some(word=> acc.some(a=>ratio(a,word) >= 0.72))) return true;
+      if(acc.some(a=>ratio(a,h) >= 0.72)) return true;
+    }
   }
-  go('s-done');
-  toast('Готово 💛');
+  return false;
 }
 
-function onMaryanaYes(){ notify('💛 Хтось відкрив запрошення і каже, що він Маряна 🙂'); milestones.push('💛 Це справді Маряна'); go('s-mood'); }
-
-/* ═══════════════ КОТИ НАСТРОЮ ═══════════════ */
-const catUrls=[
-  'https://vseplus.com/images/p/full/544319a.jpg',
-  'https://24tv.ua/resources/photos/news/201305/338665.jpg?v=1661294392000&w=1200&h=675',
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPNOYlMNOEwyYuf210aTmbZ6Pi2Lzbg5LuI3uddHotuL1QPhAEc-G_6zE&s=10',
-  'https://www.stickersplt.com.ua/wp-content/uploads/2025/03/%D0%91%D0%B5%D0%B7-%D0%BD%D0%B0%D0%B7%D0%B2%D0%B8-1_0007_Group-of-2-Objects-7.png',
-  'https://geek-point.com.ua/image/cache//data/stiker/1f8abe6cdcd65476ea6365dac82b3d72-600x500.jpg',
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScVR7H5S_mz5a-hm4TlQP58yfCddBZ9uPv3Eh38AOPCv4nYCeyuyCbe5zW&s=10'
-];
-let chosenMood=0;
-(function(){
-  const g=document.getElementById('cat-grid');
-  catUrls.forEach((u,i)=>{
-    const b=document.createElement('button');
-    b.className='cat'; b.type='button';
-    b.innerHTML=`<img src="${u}" alt="котик ${i+1}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove();this.closest('.cat').classList.add('noimg')">`;
-    b.addEventListener('click',()=>selectCat(b,i+1));
-    g.appendChild(b);
-  });
-})();
-function selectCat(el,n){
-  document.querySelectorAll('.cat').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected'); chosenMood=n;
-  document.getElementById('mood-next').disabled=false;
-}
-function moodNext(){
-  if(!chosenMood){ toast('Вибери свою кицю 🐾'); return; }
-  const url=catUrls[chosenMood-1];
-  notify(`😻 Настрій Маряни сьогодні — киця №${chosenMood}\n${url}`, true);
-  milestones.push(`😻 Киця настрою №${chosenMood}: ${url}`);
-  go('s-yablunytsia');
+function startRecognition(target, alts, isPhrase){
+  if(!SR){ el("feedback").innerHTML="Voice check needs Chrome/Edge — use “I said it right” below."; return; }
+  if(recognizing){ recognizer && recognizer.stop(); return; }
+  recognizer = new SR();
+  recognizer.lang = accent==="uk" ? "en-GB" : "en-US";
+  recognizer.interimResults = false;
+  recognizer.maxAlternatives = 5;
+  const sayBtn = el("sayBtn"), fb = el("feedback");
+  recognizer.onstart = ()=>{ recognizing=true; sayBtn.classList.add("rec"); sayBtn.textContent="● Listening…"; fb.className="feedback"; fb.textContent="Speak now…"; };
+  recognizer.onerror = e=>{ fb.className="feedback bad"; fb.textContent = e.error==="no-speech" ? "Didn’t catch that — try again." : "Mic error — check permissions."; };
+  recognizer.onend = ()=>{ recognizing=false; sayBtn.classList.remove("rec"); sayBtn.textContent="🎤 Say it"; };
+  recognizer.onresult = e=>{
+    const heard=[]; for(const r of e.results[0]) heard.push(r.transcript);
+    const ok = matches(target, heard, alts, isPhrase);
+    fb.innerHTML = `<div class="heard">heard: “${heard[0]}”</div>`;
+    if(ok){ fb.classList.add("good"); fb.insertAdjacentHTML("afterbegin","✓ Nailed it! "); pass(); }
+    else{ fb.classList.add("bad"); fb.insertAdjacentHTML("afterbegin","Close — listen again and retry. "); }
+  };
+  try{ recognizer.start(); }catch(_){}
 }
 
-/* ═══════════════ ІНШІ КРОКИ ═══════════════ */
-function onYabYes(){ notify('🌸 Підтвердила: вона таки з Яблуниці!'); milestones.push('🌸 З Яблуниці ✓'); go('s-yab-yes'); }
-function onConcertYes(){ notify('🎉🎉 ПОГОДИЛАСЬ піти на концерт зі Степаном!!!'); milestones.push('🎉 Погодилась піти на концерт!'); go('s-events'); }
-
-/* ═══════════════ КНОПКА-ВТІКАЧ ═══════════════ */
-const runaway=document.getElementById('runaway');
-function dodge(){
-  const w=runaway.offsetWidth||120, h=runaway.offsetHeight||50, m=14;
-  const maxX=window.innerWidth - w - m, maxY=window.innerHeight - h - m;
-  const x=Math.max(m, Math.random()*maxX);
-  const y=Math.max(m, Math.random()*maxY);
-  runaway.style.left=x+'px';
-  runaway.style.top=y+'px';
-}
-// на телефоні: тікає перед тим, як встигнеш тапнути
-runaway.addEventListener('touchstart',e=>{ e.preventDefault(); dodge(); },{passive:false});
-runaway.addEventListener('click',e=>{ e.preventDefault(); dodge(); });
-
-/* ═══════════════ ДАНІ ПОДІЙ ═══════════════ */
-const eventsIF=[
-  {name:'Олег Скрипка & Grand CABARET Girls Band', date:'15 серпня 2026, 19:00', venue:'Палац Потоцьких', url:'https://ivano-frankivsk.karabas.com/oleh-skrypka-grand-cabaret-girls-band/'},
-  {name:'FIЇNKA', date:'24 серпня 2026, 18:00', venue:'Міський стадіон «Рух»', url:'https://ivano-frankivsk.karabas.com/fiinka-71/'},
-  {name:'Червона рута', date:'23 вересня 2026, 18:00', venue:'Театр ім. І. Франка', url:'https://ivano-frankivsk.karabas.com/chervona-ruta-1/'},
-  {name:'CHEEV', date:'1 жовтня 2026, 19:00', venue:'ККЗ Арена-центр', url:'https://ivano-frankivsk.karabas.com/cheev-124/'},
-  {name:'Jerry Heil', date:'12 жовтня 2026, 19:00', venue:'Театр ім. І. Франка', url:'https://ivano-frankivsk.karabas.com/jerry-heil-69/'},
-  {name:'Хор «Гомін»', date:'19 жовтня 2026, 19:00', venue:'Театр ім. І. Франка', url:'https://ivano-frankivsk.karabas.com/khor-homin-120/'},
-  {name:'SKYLERR', date:'24 жовтня 2026, 19:00', venue:'ККЗ Арена-центр', tag:'рекомендація Діми', url:'https://ivano-frankivsk.karabas.com/skylerr-18/'},
-  {name:'Тіна Кароль «Кохання. Сльози. Маніфест»', date:'2 листопада 2026, 18:00', venue:'Театр ім. І. Франка', url:'https://ivano-frankivsk.karabas.com/tina-karol-kokhannya-sl-ozy-manifest-14/'},
-  {name:'СКАЙ. 25 років на сцені', date:'19 листопада 2026, 19:00', venue:'ККЗ Арена-центр', url:'https://ivano-frankivsk.karabas.com/skay-25-rokiv-na-stseni-10/'},
-  {name:'IVAN LIULENOV', date:'22 листопада 2026, 19:00', venue:'ККЗ Арена-центр', url:'https://ivano-frankivsk.karabas.com/ivan-liulenov-21/'}
-];
-const eventsYaremche=[
-  {name:'Лос Янковерс — колумбійці, що співають українські пісні', date:'29 серпня 2026, 15:00', venue:'Народний дім, Яремче', tag:'390–1090 грн', url:'https://yaremche.karabas.com/los-yankovers-kolumbiytsi-yaki-spivayut-ukrains-ki-pisni-20/order/'}
-];
-const eventsKolomyia=[
-  // Назву гурту можеш вписати сюди, коли уточниш 🙂
-  {name:'Концерт у Народному домі', date:'17 жовтня 2026, 18:00', venue:'Міський палац культури «Народний дім», Коломия'}
-];
-const ticketsInHand=[
-  {name:'Концерт Пивоварова', date:'квиток уже є 🎟️', venue:'у Степана в кишені'},
-  {name:'Лос Янковерс — колумбійці, що співають українські пісні', date:'квиток уже є 🎟️', venue:'у Степана в кишені', url:'https://ivano-frankivsk.karabas.com/los-yankovers-kolumbiytsi-yaki-spivayut-ukrains-ki-pisni-19/'}
-];
-
-function render(list, containerId, city, hasTickets){
-  const box=document.getElementById(containerId);
-  box.innerHTML='';
-  list.forEach(ev=>{
-    const card=document.createElement('div');
-    card.className='event';
-    const tag=ev.tag?`<span class="event-tag">${ev.tag}</span>`:'';
-    const buy=ev.url?`<a class="mini mini-link" href="${ev.url}" target="_blank" rel="noopener">${hasTickets?'Про концерт':'Квитки'}</a>`:'';
-    card.innerHTML=`
-      ${tag}
-      <div class="event-name">${ev.name}</div>
-      <div class="event-meta">📍 ${ev.venue}<br>🗓️ ${ev.date}</div>
-      <div class="event-actions">
-        <button class="mini mini-pick">${hasTickets?'Хочу на цей 💛':'Хочу сюди 💛'}</button>
-        ${buy}
-      </div>`;
-    card.querySelector('.mini-pick').addEventListener('click',()=>pick(ev, city));
-    box.appendChild(card);
-  });
-}
-function pick(ev, city){
-  finish(`🎫 ОБРАЛА: ${ev.name}\n📍 ${city} — ${ev.venue}\n🗓️ ${ev.date}`);
-}
-
-render(eventsIF,'list-if','Івано-Франківськ',false);
-render(eventsYaremche,'list-yaremche','Яремче',false);
-render(eventsKolomyia,'list-kolomyia','Коломия',false);
-render(ticketsInHand,'list-tickets','На руках',true);
-
-/* ═══════════════ КІНО ═══════════════ */
-const movies=[
-  {name:'Сусіди зверху', age:'16+', genre:'комедія', duration:'107 хв', times:['20:35']},
-  {name:'Посіпаки і Монстряки', age:'3+', genre:'пригоди · анімація', duration:'90 хв', times:['12:15','14:15']},
-  {name:'Ваяна', age:'3+', genre:'пригоди · сімейний · фентезі', duration:'115 хв', times:['10:00','16:10']},
-  {name:'Одіссея', age:'16+', genre:'пригоди · фентезі · екшн', duration:'172 хв', times:['10:00','13:00','13:30','16:25','19:40','19:55']},
-  {name:'Тест на тещу 2', age:'12+', genre:'комедія', duration:'91 хв', times:['18:35']},
-  {name:'Людина-Павук: Абсолютно новий день', age:'12+', genre:'екшн · пригоди', duration:'145 хв', times:['10:00','10:30','11:10','13:20','14:10 (3D)','16:30','16:50','17:10','19:30','20:10']}
-];
-(function(){
-  const box=document.getElementById('list-movies');
-  movies.forEach(m=>{
-    const card=document.createElement('div');
-    card.className='event';
-    const chips=m.times.map(t=>`<span class="time-chip">${t}</span>`).join('');
-    card.innerHTML=`
-      <div class="movie-top">
-        <div class="event-name">${m.name}</div>
-        <span class="rating">${m.age}</span>
+/* ---------------- RENDER TRAIL ---------------- */
+function render(){
+  trailEl.innerHTML = "";
+  WORDS.forEach((word,i)=>{
+    const done = cleared.has(i);
+    const unlocked = i===0 || cleared.has(i-1) || done;
+    const st = document.createElement("div");
+    st.className = "station";
+    const nodeState = done?"done":(unlocked?"current":"locked");
+    const nodeInner = done?"✓":(unlocked?(i+1):"🔒");
+    st.innerHTML = `
+      <div class="card ${done?"done":""} ${unlocked?"":"locked"}" tabindex="${unlocked?0:-1}"
+           role="button" aria-label="${word.w}" data-i="${i}">
+        <div class="w">${word.w}</div>
+        <div class="ph">${accent==="uk"?word.ipa:word.ipaUS}</div>
+        <span class="lvl ${word.lvl}">${word.lvl}</span>
       </div>
-      <div class="event-meta">🎭 ${m.genre} · ⏱️ ${m.duration}</div>
-      <div class="times">${chips}</div>
-      <div class="event-actions">
-        <button class="mini mini-pick">Хочу на цей 🍿</button>
-      </div>`;
-    card.querySelector('.mini-pick').addEventListener('click',()=>pickMovie(m));
-    box.appendChild(card);
+      <div class="node ${nodeState}">${nodeInner}</div>`;
+    trailEl.appendChild(st);
   });
-})();
-function pickMovie(m){
-  finish(`🎬 КІНО: ${m.name}\n🕒 сеанси: ${m.times.join(', ')}\n⏱️ ${m.duration}`);
+
+  // summit
+  const bossUnlocked = WORDS.every((_,i)=>cleared.has(i));
+  const bossDone = cleared.has("boss");
+  const summit = document.createElement("div");
+  summit.className = "summit";
+  summit.innerHTML = `
+    <div class="peak">${bossDone?"🚩":"🏔️"}</div>
+    <div class="boss-card ${bossUnlocked?"":"locked"} ${bossDone?"done":""}" tabindex="${bossUnlocked?0:-1}"
+         role="button" data-boss="1" aria-label="Summit boss">
+      <div class="tag">${bossDone?"✓ Conquered":"The Summit · Final Boss"}</div>
+      <div class="w">${BOSS.w}</div>
+      <div class="ph">${accent==="uk"?BOSS.ipa:BOSS.ipaUS}</div>
+      ${bossUnlocked?"":'<div class="lockmsg">🔒 Clear all 18 sounds to unlock the summit.</div>'}
+    </div>`;
+  trailEl.appendChild(summit);
+
+  updateHud();
+  bindCards();
 }
 
-/* ═══════════════ ТВІЙ ВИБІР ═══════════════ */
-(function(){
-  // посилання на інстаграм
-  const ig=document.getElementById('ig-link');
-  const u=(INSTAGRAM && !INSTAGRAM.startsWith('PASTE')) ? INSTAGRAM.replace('@','') : '';
-  if(u) ig.href=`https://instagram.com/${u}`;
-  // мінімальна дата — сьогодні
-  const today=new Date().toISOString().split('T')[0];
-  const d=document.getElementById('c-date'); if(d) d.min=today;
-  const p=document.getElementById('p-date'); if(p) p.min=today;
-  const h=document.getElementById('h-date'); if(h) h.min=today;
-})();
-function formatDate(iso){
-  const m=['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
-  const [y,mo,da]=iso.split('-').map(Number);
-  return `${da} ${m[mo-1]} ${y}`;
-}
-function sendPotato(){
-  const date=document.getElementById('p-date').value;
-  const from=document.getElementById('p-from').value;
-  const to=document.getElementById('p-to').value;
-  if(!date){ toast('Вибери день 🥔'); return; }
-  finish(`🥔 ЗБИРАТИ КАРТОПЛЮ\n🗓️ ${formatDate(date)}\n⏰ ${from} – ${to}`);
-}
-function sendHay(){
-  const date=document.getElementById('h-date').value;
-  const from=document.getElementById('h-from').value;
-  const to=document.getElementById('h-to').value;
-  if(!date){ toast('Вибери день 🌾'); return; }
-  finish(`🌾 ПОМОГТИ ІЗ СІНОМ\n🗓️ ${formatDate(date)}\n⏰ ${from} – ${to}`);
-}
-function sendCustom(){
-  const msg=document.getElementById('c-msg').value.trim();
-  const date=document.getElementById('c-date').value;
-  const time=document.getElementById('c-time').value;
-  if(!msg && !date){ toast('Напиши щось або вибери день 🙂'); return; }
-  const when = date ? formatDate(date) + (time?`, ${time}`:'') : 'день ще не вибрала';
-  finish(`💌 ТВІЙ ВИБІР\n📝 ${msg||'(без тексту)'}\n🗓️ ${when}`);
+function updateHud(){
+  const doneCount = cleared.size;
+  el("progressLabel").textContent = `Peaks conquered · ${doneCount}/${TOTAL}`;
+  el("starLabel").textContent = `★ ${doneCount}`;
+  el("progressBar").style.width = (doneCount/TOTAL*100) + "%";
+  el("winCard").classList.toggle("show", doneCount===TOTAL);
 }
 
-/* ═══════════════ ПОСЛУГИ ═══════════════ */
-function openSvc(){ document.getElementById('svc-modal').classList.add('open'); }
-function closeSvc(){ document.getElementById('svc-modal').classList.remove('open'); }
+function bindCards(){
+  document.querySelectorAll(".card").forEach(c=>{
+    if(c.classList.contains("locked")) return;
+    c.onclick = ()=> openModal(Number(c.dataset.i));
+    c.onkeydown = e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();openModal(Number(c.dataset.i));} };
+  });
+  const boss = document.querySelector(".boss-card");
+  if(boss){
+    if(boss.classList.contains("locked")){
+      boss.onclick = ()=> toast("Reach the summit — clear all 18 sounds first.");
+    }else{
+      boss.onclick = ()=> openModal("boss");
+      boss.onkeydown = e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();openModal("boss");} };
+    }
+  }
+}
+
+/* ---------------- MODAL ---------------- */
+function currentData(){ return activeIndex==="boss" ? BOSS : WORDS[activeIndex]; }
+
+function openModal(idx){
+  activeIndex = idx;
+  const d = currentData();
+  const isBoss = idx==="boss";
+  el("mLvl").textContent = isBoss ? "★ FINAL BOSS" : d.lvl.toUpperCase();
+  el("mLvl").style.color = isBoss ? "var(--coral)" : `var(--${d.lvl})`;
+  el("mWord").textContent = d.w;
+  el("mWord").style.fontSize = isBoss ? "clamp(22px,5vw,34px)" : "";
+  el("mIpa").textContent = accent==="uk" ? d.ipa : d.ipaUS;
+  el("mTip").innerHTML = d.tip;
+  const fb = el("feedback"); fb.className="feedback"; fb.textContent="";
+  el("mNext").classList.remove("show");
+  el("sayBtn").style.display = SR ? "" : "none";
+  overlay.classList.add("show");
+  el("closeBtn").focus();
+}
+function closeModal(){
+  overlay.classList.remove("show");
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  if(recognizing && recognizer) recognizer.stop();
+}
+
+function pass(){
+  if(activeIndex===null) return;
+  const first = !cleared.has(activeIndex);
+  cleared.add(activeIndex);
+  if(first){ burst(); }
+  el("mNext").classList.add("show");
+  render();
+}
+
+function gotoNext(){
+  closeModal();
+  if(activeIndex==="boss"){ return; }
+  const next = activeIndex + 1;
+  setTimeout(()=>{
+    if(next < WORDS.length && (cleared.has(next-1))) openModal(next);
+    else if(next>=WORDS.length && WORDS.every((_,i)=>cleared.has(i))) openModal("boss");
+  }, 260);
+}
+
+/* ---------------- FX ---------------- */
+let toastTimer;
+function toast(msg){
+  const t = el("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("show"),2600);
+}
+function burst(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colors=["#ffbf69","#6ee7c7","#b794f6","#ff7a7a","#fff"];
+  for(let i=0;i<70;i++){
+    const c=document.createElement("div"); c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[i%colors.length];
+    c.style.transform=`rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c);
+    const dur=1600+Math.random()*1400, drift=(Math.random()-.5)*260;
+    c.animate([{transform:`translate(0,0) rotate(0)`,opacity:1},
+               {transform:`translate(${drift}px,${window.innerHeight+60}px) rotate(${Math.random()*720}deg)`,opacity:.9}],
+              {duration:dur,easing:"cubic-bezier(.2,.6,.4,1)"}).onfinish=()=>c.remove();
+  }
+}
+
+/* ---------------- EVENTS ---------------- */
+el("listenBtn").onclick = ()=> speak(currentData().speak||currentData().w, 0.9);
+el("slowBtn").onclick   = ()=> speak(currentData().speak||currentData().w, 0.55);
+el("sayBtn").onclick    = ()=>{ const d=currentData(); startRecognition(d.speak||d.w, d.alt||[], activeIndex==="boss"); };
+el("selfBtn").onclick   = ()=>{ el("feedback").className="feedback good"; el("feedback").textContent="✓ Marked done — keep climbing!"; pass(); };
+el("nextBtn").onclick   = gotoNext;
+el("closeBtn").onclick  = closeModal;
+overlay.onclick = e=>{ if(e.target===overlay) closeModal(); };
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && overlay.classList.contains("show")) closeModal(); });
+
+el("uk").onclick = ()=> setAccent("uk");
+el("us").onclick = ()=> setAccent("us");
+function setAccent(a){
+  accent=a;
+  el("uk").setAttribute("aria-pressed", a==="uk");
+  el("us").setAttribute("aria-pressed", a==="us");
+  if(overlay.classList.contains("show")) el("mIpa").textContent = accent==="uk"?currentData().ipa:currentData().ipaUS;
+  render();
+}
+
+el("resetBtn").onclick = ()=>{ cleared = new Set(); render(); window.scrollTo({top:0,behavior:"smooth"}); };
+
+render();
 </script>
 </body>
 </html>
